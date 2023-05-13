@@ -79,9 +79,9 @@ func allowUserToSelectItem(selectables []string) (string, error) {
 		ShowSecondaryText(false).
 		SetSelectedFunc(func(index int, mainText string, secondaryText string, shortcut rune) {
 			selectedFruit = selectables[index]
-			returnValue(selectedFruit, &ClipboardDestination{})
-			returnValue(selectedFruit, &ConsoleDestination{})
-			returnValue(selectedFruit, &FileDestination{FilePath: "fruits.txt"})
+			// returnValue(selectedFruit, &ClipboardDestination{})
+			// returnValue(selectedFruit, &ConsoleDestination{})
+			// returnValue(selectedFruit, &FileDestination{FilePath: "fruits.txt"})
 			app.Stop()
 		})
 	for _, item := range selectables {
