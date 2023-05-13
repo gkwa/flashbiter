@@ -9,27 +9,28 @@ function flashbiterwrapper {
         return
     }
     if (Test-Path -Path $clean -PathType Container) {
-        Set-Location $clean
+        Write-Host "[$clean]"
+        Push-Location $clean > $null
         git log --pretty=format:'%Creset%h%C(yellow)%d%Creset %ar %s' --reverse
+        Pop-Location > $null
     }
-    Write-Output "$clean"
 }
 #+end_example
 
 *** bash
 
 #+begin_example
-function flashbiterwrapper {
-    $path = & 'flashbiter' $args
-    $clean = $path -replace "`n", ""
-    if ([string]::IsNullOrEmpty($clean)) {
+function flashbiterwrapper() {
+    local path=$(flashbiter "$*")
+    local clean=$(echo "$path" | tr -d '\n')
+    if [ -z "$clean" ]; then
         return
-    }
-    if (Test-Path -Path $clean -PathType Container) {
-        Set-Location $clean
-        git log --pretty=format:'%Creset%h%C(yellow)%d%Creset %ar %s' --reverse
-    }
-    Write-Output "$clean"
+    fi
+    if [ -d "$clean" ]; then
+        cd "$clean"
+        git log --pretty=tformat:'%Creset%h%C(yellow)%d%Creset %ar %s' --reverse
+    fi
+    echo "$clean"
 }
 #+end_example
 
