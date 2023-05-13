@@ -9,11 +9,10 @@ function flashbiterwrapper {
         return
     }
     if (Test-Path -Path $clean -PathType Container) {
-        Write-Host "[$clean]"
-        Push-Location $clean > $null
+        Set-Location $clean
         git log --pretty=format:'%Creset%h%C(yellow)%d%Creset %ar %s' --reverse
-        Pop-Location > $null
     }
+    Write-Output "$clean"
 }
 #+end_example
 
