@@ -423,6 +423,11 @@ func main() {
 		panic(err)
 	}
 
+	// human canceled tview
+	if selectedPath == "" {
+		return
+	}
+
 	GitInit(selectedPath)
 	_ = gitCommitReadme(selectedPath)
 
