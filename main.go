@@ -7,6 +7,7 @@ import (
 	"os/user"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 	"text/template"
 	"time"
@@ -55,6 +56,13 @@ func (cd *ConsoleDestination) Write(data string) error {
 	return nil
 }
 
+type BlackholeDestination struct{}
+
+// fixme: never see otuput of this, dunno why
+func (cd *BlackholeDestination) Write(data string) error {
+	return nil
+}
+
 type ClipboardDestination struct{}
 
 func (cd *ClipboardDestination) Write(data string) error {
@@ -73,55 +81,6 @@ func returnValue(val string, output OutputDestination) {
 	if err := output.Write(val); err != nil {
 		fmt.Println("Error writing to output:", err)
 	}
-}
-
-func allowUserToSelectItem(selectables []string) (string, error) {
-	app := tview.NewApplication()
-
-	var selectedItem string
-
-	// Create a list widget and add the items to it
-	list := tview.NewList().
-		ShowSecondaryText(false).
-		SetSelectedFunc(func(index int, mainText string, secondaryText string, shortcut rune) {
-			selectedItem = selectables[index]
-			// returnValue(selectedItem, &ClipboardDestination{})
-			// returnValue(selectedItem, &ConsoleDestination{})
-			// returnValue(selectedItem, &FileDestination{FilePath: "items.txt"})
-			app.Stop()
-		})
-	for _, item := range selectables {
-		list.AddItem(item, "", rune(0), nil)
-	}
-
-	// Set up key bindings to navigate the list
-	list.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		switch event.Key() {
-		case tcell.KeyRune:
-			switch event.Rune() {
-			case 'n':
-				list.SetCurrentItem((list.GetCurrentItem() + 1) % list.GetItemCount())
-				return nil
-			case 'p':
-				current := list.GetCurrentItem()
-				if current == 0 {
-					current = list.GetItemCount()
-				}
-				list.SetCurrentItem((current - 1) % list.GetItemCount())
-				return nil
-			case 'q':
-				app.Stop()
-				return nil
-			}
-		}
-		return event
-	})
-
-	// Set the list widget as the root and run the application
-	if err := app.SetRoot(list, true).EnableMouse(true).Run(); err != nil {
-		panic(err)
-	}
-	return selectedItem, nil
 }
 
 func pathExists(path string) bool {
@@ -218,9 +177,73 @@ func generateUniquePaths(baseDir string, numPaths int, pn PathNamer) map[string]
 	return myMap
 }
 
-func selectPath(paths map[string]string) (string, error) {
+type InputSelector interface {
+	SelectItem(keys []string) (string, error)
+}
+
+type TviewInputSelector struct{}
+
+func (uis *TviewInputSelector) SelectItem(keys []string) (string, error) {
+	app := tview.NewApplication()
+
+	var selectedItem string
+
+	// Create a list widget and add the items to it
+	list := tview.NewList().
+		ShowSecondaryText(false).
+		SetSelectedFunc(func(index int, mainText string, secondaryText string, shortcut rune) {
+			selectedItem = keys[index]
+			returnValue(selectedItem, &BlackholeDestination{})
+			// returnValue(selectedItem, &ClipboardDestination{})
+			// returnValue(selectedItem, &ConsoleDestination{})
+			// returnValue(selectedItem, &FileDestination{FilePath: "items.txt"})
+			app.Stop()
+		})
+	for _, item := range keys {
+		list.AddItem(item, "", rune(0), nil)
+	}
+
+	// Set up key bindings to navigate the list
+	list.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		switch event.Key() {
+		case tcell.KeyRune:
+			switch event.Rune() {
+			case 'n':
+				list.SetCurrentItem((list.GetCurrentItem() + 1) % list.GetItemCount())
+				return nil
+			case 'p':
+				current := list.GetCurrentItem()
+				if current == 0 {
+					current = list.GetItemCount()
+				}
+				list.SetCurrentItem((current - 1) % list.GetItemCount())
+				return nil
+			case 'q':
+				app.Stop()
+				return nil
+			}
+		}
+		return event
+	})
+
+	// Set the list widget as the root and run the application
+	if err := app.SetRoot(list, true).EnableMouse(true).Run(); err != nil {
+		panic(err)
+	}
+	return selectedItem, nil
+}
+
+type RandomItemSelector struct{}
+
+func (ris *RandomItemSelector) SelectItem(keys []string) (string, error) {
+	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
+	index := rng.Intn(len(keys))
+	return keys[index], nil
+}
+
+func selectPath(paths map[string]string, is InputSelector) (string, error) {
 	sortedKeys := sortedKeys(paths)
-	item, err := allowUserToSelectItem(sortedKeys)
+	item, err := is.SelectItem(sortedKeys)
 	if err != nil {
 		return "", err
 	}
@@ -335,20 +358,46 @@ func gitCommitReadme(dir string) error {
 	return nil
 }
 
-func getNamer() PathNamer {
-	if rand.Intn(2) == 0 {
-		return &SententiaPathNamer{}
-	} else {
-		return &RandomPathNamer{}
+func stringToBool(s string) (bool, error) {
+	b, err := strconv.ParseBool(s)
+	if err != nil {
+		return false, err
 	}
+	return b, nil
+}
+
+func getInputSelector() InputSelector {
+	ris := &RandomItemSelector{}
+	uis := &TviewInputSelector{}
+	envVars := []string{"GITHUB_ACTIONS", "GITLAB_CI"}
+
+	for _, envVar := range envVars {
+		s := os.Getenv(envVar)
+		b, err := stringToBool(s)
+		if err != nil {
+			return uis
+		}
+		if b {
+			return ris
+		}
+	}
+	return uis
 }
 
 func main() {
 	baseDir := getBaseDir()
 	candidateCount := 35
-	uniquePaths := generateUniquePaths(baseDir, candidateCount, getNamer())
 
-	selectedPath, err := selectPath(uniquePaths)
+	var pn PathNamer
+	if rand.Intn(2) == 0 {
+		pn = &SententiaPathNamer{}
+	} else {
+		pn = &RandomPathNamer{}
+	}
+	uniquePaths := generateUniquePaths(baseDir, candidateCount, pn)
+
+	inputSelector := getInputSelector()
+	selectedPath, err := selectPath(uniquePaths, inputSelector)
 	if err != nil {
 		panic(err)
 	}
