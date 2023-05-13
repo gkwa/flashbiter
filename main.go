@@ -384,6 +384,27 @@ func getInputSelector() InputSelector {
 	return uis
 }
 
+func getAbsPath(path string) (string, error) {
+	absPath, err := filepath.Abs(path)
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+
+	fileInfo, err := os.Stat(absPath)
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+
+	if !fileInfo.IsDir() {
+		msg := fmt.Sprintf("%s is not a directory\n", absPath)
+		panic(msg)
+	}
+
+	return absPath, nil
+}
+
 func main() {
 	baseDir := getBaseDir()
 	candidateCount := 35
@@ -405,21 +426,9 @@ func main() {
 	GitInit(selectedPath)
 	_ = gitCommitReadme(selectedPath)
 
-	absPath, err := filepath.Abs(selectedPath)
+	absPath, err := getAbsPath(selectedPath)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	fileInfo, err := os.Stat(absPath)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	if !fileInfo.IsDir() {
-		fmt.Printf("%s is not a directory\n", absPath)
-		os.Exit(1)
+		panic(err)
 	}
 
 	fmt.Println(absPath)
