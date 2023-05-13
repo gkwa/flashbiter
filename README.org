@@ -34,3 +34,18 @@ function flashbiterwrapper() {
 }
 #+end_example
 
+
+** motivation
+
+I suck at thinking of clever names of things so I punt an create
+random words for project names.
+
+This project speeds up these steps.
+
+** steps
+
+# manually add wrapper to shell
+create a random string
+make a directory with this name
+cd to this directory
+initialize git repo here
