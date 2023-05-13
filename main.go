@@ -407,6 +407,8 @@ func getAbsPath(path string) (string, error) {
 
 func main() {
 	baseDir := getBaseDir()
+	expandTilde(&baseDir)
+
 	candidateCount := 35
 
 	var pn PathNamer
