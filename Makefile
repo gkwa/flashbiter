@@ -1,8 +1,20 @@
-SOURCES := $(shell find . -name '*.go')
-TARGET := ./dist/flashbiter_darwin_amd64_v1/flashbiter
+SOURCES := $(wildcard *.go) $(wildcard **/*.go)
 
-run: flashbiter
-	./flashbiter
+ifeq ($(shell uname),Darwin)
+    GOOS = darwin
+    GOARCH = amd64
+    EXEEXT =
+else ifeq ($(shell uname),Linux)
+    GOOS = linux
+    GOARCH = $(shell arch)
+    EXEEXT =
+else ifeq ($(shell uname),Windows_NT)
+    GOOS = windows
+    GOARCH = amd64
+    EXEEXT = .exe
+endif
+
+TARGET := ./dist/flashbiter_$(GOOS)_$(GOARCH)_v1/flashbiter
 
 flashbiter: $(TARGET)
 	cp $< $@

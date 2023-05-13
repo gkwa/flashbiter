@@ -3,11 +3,16 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/user"
 	"path/filepath"
+	"sort"
+	"strings"
 
+	"github.com/Pallinder/go-randomdata"
 	"github.com/atotto/clipboard"
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
+	log "github.com/taylormonacelli/reactnut/cmd/logging"
 )
 
 type Fruit struct {
@@ -113,19 +118,117 @@ func allowUserToSelectItem(selectables []string) (string, error) {
 	return selectedFruit, nil
 }
 
+func concatWords() string {
+	adjective := randomdata.Adjective()
+	noun := randomdata.Noun()
+	concat := strings.ToLower(fmt.Sprintf("%s%s", adjective, noun))
+	return concat
+}
+
+func pathExists(path string) bool {
+	err := expandTilde(&path)
+	if err != nil {
+		log.Logger.Fatalf("expanding tilde creates error for path: %s, error: %s",
+			path, err)
+	}
+	log.Logger.Traceln(path) // output: /Users/username/Documents/example.txt
+
+	// Use os.Stat() to get information about the path
+	fileInfo, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+
+	// Check if the error value is nil, which indicates that the path exists
+	if err == nil {
+		// Check if the path is a directory
+		if fileInfo.Mode().IsDir() {
+			log.Logger.Tracef("%s is a directory", path)
+		} else {
+			log.Logger.Tracef("%s is a file", path)
+		}
+	} else {
+		log.Logger.Tracef("Path %s does not exist", path)
+	}
+	return true
+}
+
+func expandTilde(path *string) error {
+	if strings.HasPrefix(*path, "~/") || *path == "~" {
+		currentUser, err := user.Current()
+		if err != nil {
+			log.Logger.Warningf("checking current user results in error: %s", err)
+			return err
+		}
+		*path = strings.Replace(*path, "~", currentUser.HomeDir, 1)
+		log.Logger.Tracef("path is expanded to %s", *path)
+		return nil
+	}
+	return nil
+}
+
+func sortedKeys(m map[string]string) []string {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
+}
+
+func genPathStr(basePath string, subdir string, fullPath *string) error {
+	*fullPath = filepath.Join(basePath, subdir)
+
+	err := expandTilde(fullPath)
+	if err != nil {
+		log.Logger.Fatalf("expanding path causes error: %s", err)
+	}
+
+	if filepath.IsAbs(*fullPath) {
+		return nil
+	}
+
+	c, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+
+	*fullPath = filepath.Join(c, *fullPath)
+	return nil
+}
+
 func main() {
-	items := []string{"apple", "pear"}
+	var baseDir string
+	if len(os.Args) > 1 {
+		baseDir = os.Args[1]
+	} else {
+		baseDir = "."
+	}
 
-	item, err := allowUserToSelectItem(items)
+	var fullPath string
+	myMap := make(map[string]string)
+
+	for i := 0; i < 35; i++ {
+		subdir := concatWords()
+		err := genPathStr(baseDir, subdir, &fullPath)
+		if err != nil {
+			panic(err)
+		}
+
+		_, keyExists := myMap[subdir]
+
+		if keyExists || pathExists(fullPath) {
+			i--
+			continue
+		}
+
+		myMap[subdir] = fullPath
+	}
+
+	sorted := sortedKeys(myMap)
+	item, err := allowUserToSelectItem(sorted)
 	if err != nil {
 		panic(err)
 	}
-
-	dir, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-
-	fullPath := filepath.Join(dir, item)
-	fmt.Println(fullPath)
+	fmt.Println(myMap[item])
 }
