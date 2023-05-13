@@ -24,6 +24,9 @@ $(TARGET): $(SOURCES)
 	goreleaser build --single-target --snapshot --clean
 	go vet ./...
 
+all:
+	goreleaser build --snapshot --clean
+
 .PHONY: clean
 clean:
 	rm -f flashbiter
