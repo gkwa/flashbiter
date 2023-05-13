@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -12,6 +13,7 @@ import (
 
 	"github.com/Pallinder/go-randomdata"
 	"github.com/atotto/clipboard"
+	"github.com/castillobgr/sententia"
 	"github.com/gdamore/tcell/v2"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing/object"
@@ -122,12 +124,6 @@ func allowUserToSelectItem(selectables []string) (string, error) {
 	return selectedItem, nil
 }
 
-func generateConcatenatedWord() string {
-	adjective := randomdata.Adjective()
-	noun := randomdata.Noun()
-	return strings.ToLower(adjective + noun)
-}
-
 func pathExists(path string) bool {
 	err := expandTilde(&path)
 	if err != nil {
@@ -186,15 +182,37 @@ func getBaseDir() string {
 	return "."
 }
 
-func generateUniquePaths(baseDir string, numPaths int) map[string]string {
+type PathNamer interface {
+	GetName() string
+}
+
+type RandomPathNamer struct{}
+
+func (rpn *RandomPathNamer) GetName() string {
+	adjective := randomdata.Adjective()
+	noun := randomdata.Noun()
+	return strings.ToLower(adjective + noun)
+}
+
+type SententiaPathNamer struct{}
+
+func (spn *SententiaPathNamer) GetName() string {
+	str, err := sententia.Make("{{ adjective }}{{ nouns }}")
+	if err != nil {
+		panic(err)
+	}
+	return strings.ToLower(str)
+}
+
+func generateUniquePaths(baseDir string, numPaths int, pn PathNamer) map[string]string {
 	myMap := make(map[string]string)
 	for i := 0; i < numPaths; {
-		subdir := generateConcatenatedWord()
-		fullPath := filepath.Join(baseDir, subdir)
-		if _, keyExists := myMap[subdir]; keyExists || pathExists(fullPath) {
+		subdir := pn.GetName()
+		fullpath := filepath.Join(baseDir, subdir)
+		if _, keyExists := myMap[subdir]; keyExists || pathExists(fullpath) {
 			continue
 		}
-		myMap[subdir] = fullPath
+		myMap[subdir] = fullpath
 		i++
 	}
 	return myMap
@@ -214,7 +232,6 @@ func GitInit(path string) error {
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 
@@ -318,10 +335,20 @@ func gitCommitReadme(dir string) error {
 	return nil
 }
 
+func getNamer() PathNamer {
+	if rand.Intn(2) == 0 {
+		return &SententiaPathNamer{}
+	} else {
+		return &RandomPathNamer{}
+	}
+}
+
 func main() {
 	baseDir := getBaseDir()
-	myMap := generateUniquePaths(baseDir, 35)
-	selectedPath, err := selectPath(myMap)
+	candidateCount := 35
+	uniquePaths := generateUniquePaths(baseDir, candidateCount, getNamer())
+
+	selectedPath, err := selectPath(uniquePaths)
 	if err != nil {
 		panic(err)
 	}

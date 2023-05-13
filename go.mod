@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/Pallinder/go-randomdata v1.2.0
 	github.com/atotto/clipboard v0.1.4
+	github.com/castillobgr/sententia v0.0.0-20160918013314-9b04b4a53625
 	github.com/gdamore/tcell/v2 v2.6.0
 	github.com/go-git/go-git/v5 v5.6.1
 	github.com/rivo/tview v0.0.0-20230511053024-822bd067b165
