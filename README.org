@@ -42,10 +42,12 @@ random words for project names.
 
 This project speeds up these steps.
 
+And gives me a motivation to learn go.
+
 ** steps
 
-+ manually add wrapper to shell
-+ create a random string
-+ make a directory with this name
-+ cd to this directory
-+ initialize git repo here
+human: manually add wrapper to shell
++ exe: create a random string
++ exe: make a directory with this name
++ exe: initialize a new git repo there
++ wrapper: cds into this directory
