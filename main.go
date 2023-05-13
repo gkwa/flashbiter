@@ -401,7 +401,26 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	GitInit(selectedPath)
 	_ = gitCommitReadme(selectedPath)
-	fmt.Println(selectedPath)
+
+	absPath, err := filepath.Abs(selectedPath)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	fileInfo, err := os.Stat(absPath)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	if !fileInfo.IsDir() {
+		fmt.Printf("%s is not a directory\n", absPath)
+		os.Exit(1)
+	}
+
+	fmt.Println(absPath)
 }
