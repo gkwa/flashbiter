@@ -15,7 +15,7 @@ import (
 	log "github.com/taylormonacelli/reactnut/cmd/logging"
 )
 
-type Fruit struct {
+type Item struct {
 	Name string
 }
 
@@ -72,16 +72,16 @@ func returnValue(val string, output OutputDestination) {
 func allowUserToSelectItem(selectables []string) (string, error) {
 	app := tview.NewApplication()
 
-	var selectedFruit string
+	var selectedItem string
 
-	// Create a list widget and add the fruits to it
+	// Create a list widget and add the items to it
 	list := tview.NewList().
 		ShowSecondaryText(false).
 		SetSelectedFunc(func(index int, mainText string, secondaryText string, shortcut rune) {
-			selectedFruit = selectables[index]
-			// returnValue(selectedFruit, &ClipboardDestination{})
-			// returnValue(selectedFruit, &ConsoleDestination{})
-			// returnValue(selectedFruit, &FileDestination{FilePath: "fruits.txt"})
+			selectedItem = selectables[index]
+			returnValue(selectedItem, &ClipboardDestination{})
+			// returnValue(selectedItem, &ConsoleDestination{})
+			// returnValue(selectedItem, &FileDestination{FilePath: "items.txt"})
 			app.Stop()
 		})
 	for _, item := range selectables {
@@ -115,14 +115,13 @@ func allowUserToSelectItem(selectables []string) (string, error) {
 	if err := app.SetRoot(list, true).EnableMouse(true).Run(); err != nil {
 		panic(err)
 	}
-	return selectedFruit, nil
+	return selectedItem, nil
 }
 
-func concatWords() string {
+func generateConcatenatedWord() string {
 	adjective := randomdata.Adjective()
 	noun := randomdata.Noun()
-	concat := strings.ToLower(fmt.Sprintf("%s%s", adjective, noun))
-	return concat
+	return strings.ToLower(adjective + noun)
 }
 
 func pathExists(path string) bool {
@@ -176,59 +175,42 @@ func sortedKeys(m map[string]string) []string {
 	return keys
 }
 
-func genPathStr(basePath string, subdir string, fullPath *string) error {
-	*fullPath = filepath.Join(basePath, subdir)
+func getBaseDir() string {
+	if len(os.Args) > 1 {
+		return os.Args[1]
+	}
+	return "."
+}
 
-	err := expandTilde(fullPath)
+func generateUniquePaths(baseDir string, numPaths int) map[string]string {
+	myMap := make(map[string]string)
+	for i := 0; i < numPaths; {
+		subdir := generateConcatenatedWord()
+		fullPath := filepath.Join(baseDir, subdir)
+		if _, keyExists := myMap[subdir]; keyExists || pathExists(fullPath) {
+			continue
+		}
+		myMap[subdir] = fullPath
+		i++
+	}
+	return myMap
+}
+
+func selectPath(paths map[string]string) (string, error) {
+	sortedKeys := sortedKeys(paths)
+	item, err := allowUserToSelectItem(sortedKeys)
 	if err != nil {
-		log.Logger.Fatalf("expanding path causes error: %s", err)
+		return "", err
 	}
-
-	if filepath.IsAbs(*fullPath) {
-		return nil
-	}
-
-	c, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-
-	*fullPath = filepath.Join(c, *fullPath)
-	return nil
+	return paths[item], nil
 }
 
 func main() {
-	var baseDir string
-	if len(os.Args) > 1 {
-		baseDir = os.Args[1]
-	} else {
-		baseDir = "."
-	}
-
-	var fullPath string
-	myMap := make(map[string]string)
-
-	for i := 0; i < 35; i++ {
-		subdir := concatWords()
-		err := genPathStr(baseDir, subdir, &fullPath)
-		if err != nil {
-			panic(err)
-		}
-
-		_, keyExists := myMap[subdir]
-
-		if keyExists || pathExists(fullPath) {
-			i--
-			continue
-		}
-
-		myMap[subdir] = fullPath
-	}
-
-	sorted := sortedKeys(myMap)
-	item, err := allowUserToSelectItem(sorted)
+	baseDir := getBaseDir()
+	myMap := generateUniquePaths(baseDir, 35)
+	selectedPath, err := selectPath(myMap)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(myMap[item])
+	fmt.Println(selectedPath)
 }
