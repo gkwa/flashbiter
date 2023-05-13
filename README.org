@@ -1,6 +1,6 @@
 ** motivation
 
-I suck at thinking of clever names of things so I punt an create
+I suck at thinking of clever names of things so I punt and create
 random words for project names.
 
 This project speeds up these steps.
