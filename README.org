@@ -1,3 +1,12 @@
+** motivation
+
+I suck at thinking of clever names of things so I punt an create
+random words for project names.
+
+This project speeds up these steps.
+
+And gives me a motivation to learn go.
+
 ** wrapper for shell
 *** powershell
 
@@ -34,15 +43,6 @@ function flashbiterwrapper() {
 }
 #+end_example
 
-
-** motivation
-
-I suck at thinking of clever names of things so I punt an create
-random words for project names.
-
-This project speeds up these steps.
-
-And gives me a motivation to learn go.
 
 ** steps
 
