@@ -8,6 +8,8 @@ import (
 	"sort"
 	"strings"
 
+	git "github.com/taylormonacelli/flashbiter/git"
+
 	"github.com/Pallinder/go-randomdata"
 	"github.com/atotto/clipboard"
 	"github.com/gdamore/tcell/v2"
@@ -212,5 +214,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	git.GitInit(selectedPath)
 	fmt.Println(selectedPath)
 }
