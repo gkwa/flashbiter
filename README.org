@@ -44,8 +44,8 @@ This project speeds up these steps.
 
 ** steps
 
-# manually add wrapper to shell
-create a random string
-make a directory with this name
-cd to this directory
-initialize git repo here
++ manually add wrapper to shell
++ create a random string
++ make a directory with this name
++ cd to this directory
++ initialize git repo here
