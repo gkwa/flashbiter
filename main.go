@@ -439,4 +439,5 @@ func main() {
 	}
 
 	fmt.Println(absPath)
+	clipboard.WriteAll(absPath)
 }
