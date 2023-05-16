@@ -343,7 +343,7 @@ func gitCommitReadme(dir string) error {
 	}
 
 	// Commit the changes
-	_, err = worktree.Commit("Add README.md", &git.CommitOptions{
+	_, err = worktree.Commit("Initial boilerplate", &git.CommitOptions{
 		Author: &object.Signature{
 			Name:  "Your Name",
 			Email: "your.email@example.com",
