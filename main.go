@@ -260,15 +260,15 @@ func GitInit(path string) error {
 
 func gitCommitReadme(dir string) error {
 	// Define the template string
-	const tmpl = `# {{.Title}}
+	const tmpl = `* {{.Title}}
 
 {{.Description}}
 
-## Installation
+** Installation
 
 {{.Installation}}
 
-## Usage
+** Usage
 
 {{.Usage}}
 `
@@ -293,7 +293,7 @@ func gitCommitReadme(dir string) error {
 		return err
 	}
 
-	filename := "README.md"
+	filename := "README.org"
 	fullPath := filepath.Join(dir, filename)
 
 	// Create the new file
@@ -323,7 +323,7 @@ func gitCommitReadme(dir string) error {
 	}
 
 	// Create the new file
-	file, err = os.Create("README.md")
+	file, err = os.Create("README.org")
 	if err != nil {
 		fmt.Println(err)
 		return err
@@ -336,7 +336,7 @@ func gitCommitReadme(dir string) error {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	_, err = worktree.Add("README.md")
+	_, err = worktree.Add("README.org")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
