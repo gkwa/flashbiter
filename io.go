@@ -102,6 +102,8 @@ func returnValue(val string, output OutputDestination) {
 func getInputSelector() InputSelector {
 	ris := &RandomItemSelector{}
 	uis := &TviewInputSelector{}
+
+	// don't prompt for input while in automated pipeline
 	envVars := []string{"GITHUB_ACTIONS", "GITLAB_CI"}
 
 	for _, envVar := range envVars {
