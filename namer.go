@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/Pallinder/go-randomdata"
-	fake "github.com/brianvoe/gofakeit/v6"
+	"github.com/brianvoe/gofakeit/v6"
 	"github.com/castillobgr/sententia"
 )
 
@@ -32,8 +32,8 @@ func (rpn *RandomdataPathNamer) GetName() string {
 }
 
 func (spn *GofakeitPathNamer) GetName() string {
-	adjective := fake.AdjectiveDescriptive()
-	noun := fake.Noun()
+	adjective := gofakeit.AdjectiveDescriptive()
+	noun := gofakeit.Noun()
 
 	return strings.ToLower(adjective + noun)
 }
