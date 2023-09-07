@@ -16,10 +16,6 @@ type RandomdataPathNamer struct{}
 
 type RandomItemSelector struct{}
 
-type Item struct {
-	Name string
-}
-
 type PathNamer interface {
 	GetName() string
 }
