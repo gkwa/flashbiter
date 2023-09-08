@@ -11,7 +11,7 @@ func main() {
 	baseDir := getBaseDir()
 	expandTilde(&baseDir)
 
-	candidateCount := 35
+	count := 35
 
 	var pn PathNamer
 
@@ -25,7 +25,7 @@ func main() {
 		pn = &GofakeitPathNamer{}
 	}
 
-	uniquePaths := generateUniquePaths(baseDir, candidateCount, pn)
+	uniquePaths := generateUniquePaths(baseDir, count, pn)
 
 	inputSelector := getInputSelector()
 	selectedPath, err := selectPath(uniquePaths, inputSelector)
