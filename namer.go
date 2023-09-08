@@ -7,12 +7,9 @@ import (
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/castillobgr/sententia"
 )
-
-type SententiaPathNamer struct{}
-
-type GofakeitPathNamer struct{}
-
 type RandomdataPathNamer struct{}
+type GofakeitPathNamer struct{}
+type SententiaPathNamer struct{}
 
 type RandomItemSelector struct{}
 

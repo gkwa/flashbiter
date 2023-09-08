@@ -12,9 +12,7 @@ import (
 )
 
 type ClipboardDestination struct{}
-
 type ConsoleDestination struct{}
-
 type BlackholeDestination struct{}
 
 type OutputDestination interface {
