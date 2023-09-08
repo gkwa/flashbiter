@@ -17,21 +17,32 @@ func main() {
 	var pn PathNamer
 
 	namers := []PathNamer{
-		// &SententiaPathNamer{},
-		// &RandomdataPathNamer{},
-		// &GofakeitPathNamer{},
-		// &GofakeitPathNamer{},
+		&SententiaPathNamer{},
+		&RandomdataPathNamer{},
+		&GofakeitPathNamer{},
 		&Combo1{},
 		&Combo2{},
-		&Combo3{},
+		&Combo4{},
+		&Combo5{},
+		&Combo6{},
+		&Combo7{},
+		&Combo8{},
 	}
 
 	source := rand.NewSource(time.Now().UnixNano())
 	rng := rand.New(source)
 
-	randomIndex := rng.Intn(len(namers))
-	pn = namers[randomIndex]
-	uniquePaths := generateUniquePaths(baseDir, count, pn)
+	var uniquePaths map[string]string
+
+	for {
+		randomIndex := rng.Intn(len(namers))
+		pn = namers[randomIndex]
+		x := generateUniquePaths(baseDir, 2, pn)
+		uniquePaths = mergeMaps(uniquePaths, x)
+		if len(uniquePaths) >= count {
+			break
+		}
+	}
 
 	inputSelector := getInputSelector()
 	selectedPath, err := selectPath(uniquePaths, inputSelector)

@@ -10,7 +10,7 @@ import (
 )
 
 func clean(str1, str2 string) string {
-	r := strings.ToLower(str1 + str2)
+	r := strings.ToLower(str2 + str1)
 	str := regexp.MustCompile(`[^a-zA-Z0-9]+`).ReplaceAllString(r, "")
 	return str
 }
@@ -41,6 +41,51 @@ type Combo3 struct{}
 
 func (spn *Combo3) GetName() string {
 	noun := gofakeit.Hobby()
+	adjective := gofakeit.Adjective()
+
+	return clean(noun, adjective)
+}
+
+type Combo4 struct{}
+
+func (spn *Combo4) GetName() string {
+	noun := gofakeit.BeerName()
+	adjective := gofakeit.Adjective()
+
+	return clean(noun, adjective)
+}
+
+type Combo5 struct{}
+
+func (spn *Combo5) GetName() string {
+	noun := gofakeit.CarMaker()
+	adjective := gofakeit.Adjective()
+
+	return clean(noun, adjective)
+}
+
+type Combo7 struct{}
+
+func (spn *Combo7) GetName() string {
+	noun := gofakeit.HackerNoun()
+	adjective := gofakeit.Adjective()
+
+	return clean(noun, adjective)
+}
+
+type Combo8 struct{}
+
+func (spn *Combo8) GetName() string {
+	noun := gofakeit.Animal()
+	adjective := gofakeit.Adjective()
+
+	return clean(noun, adjective)
+}
+
+type Combo6 struct{}
+
+func (spn *Combo6) GetName() string {
+	noun := gofakeit.JobTitle()
 	adjective := gofakeit.Adjective()
 
 	return clean(noun, adjective)

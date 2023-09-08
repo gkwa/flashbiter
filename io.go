@@ -57,6 +57,20 @@ func (fd *FileDestination) Write(data string) error {
 	return nil
 }
 
+func mergeMaps(map1, map2 map[string]string) map[string]string {
+	merged := make(map[string]string)
+
+	for key, value := range map1 {
+		merged[key] = value
+	}
+
+	for key, value := range map2 {
+		merged[key] = value
+	}
+
+	return merged
+}
+
 func generateUniquePaths(baseDir string, numPaths int, pn PathNamer) map[string]string {
 	myMap := make(map[string]string)
 	for i := 0; i < numPaths; {
