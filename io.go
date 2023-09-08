@@ -15,6 +15,8 @@ type ClipboardDestination struct{}
 type ConsoleDestination struct{}
 type BlackholeDestination struct{}
 
+type RandomItemSelector struct{}
+
 type OutputDestination interface {
 	Write(data string) error
 }
