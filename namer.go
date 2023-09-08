@@ -1,6 +1,7 @@
 package main
 
 import (
+	"regexp"
 	"strings"
 
 	"github.com/Pallinder/go-randomdata"
@@ -8,55 +9,73 @@ import (
 	"github.com/castillobgr/sententia"
 )
 
+func clean(str1, str2 string) string {
+	r := strings.ToLower(str1 + str2)
+	str := regexp.MustCompile(`[^a-zA-Z0-9]+`).ReplaceAllString(r, "")
+	return str
+}
 
 type PathNamer interface {
 	GetName() string
 }
 
-
 type Combo1 struct{}
 
 func (spn *Combo1) GetName() string {
-	adjective := gofakeit.SafeColor()
 	noun := gofakeit.NounAbstract()
+	adjective := gofakeit.SafeColor()
 
-	return strings.ToLower(adjective + noun)
+	return clean(noun, adjective)
 }
 
 type Combo2 struct{}
 
 func (spn *Combo2) GetName() string {
-	adjective := gofakeit.Adjective()
 	noun := gofakeit.State()
+	adjective := gofakeit.Adjective()
 
-	return strings.ToLower(adjective + noun)
+	return clean(noun, adjective)
 }
 
+type Combo3 struct{}
+
+func (spn *Combo3) GetName() string {
+	noun := gofakeit.Hobby()
+	adjective := gofakeit.Adjective()
+
+	return clean(noun, adjective)
+}
 
 type RandomdataPathNamer struct{}
 
 func (rpn *RandomdataPathNamer) GetName() string {
-	adjective := randomdata.Adjective()
 	noun := randomdata.Noun()
+	adjective := randomdata.Adjective()
 
-	return strings.ToLower(adjective + noun)
+	return clean(noun, adjective)
 }
 
 type GofakeitPathNamer struct{}
 
 func (spn *GofakeitPathNamer) GetName() string {
-	adjective := gofakeit.HackerAdjective()
 	noun := gofakeit.NounAbstract()
+	adjective := gofakeit.HackerAdjective()
 
-	return strings.ToLower(adjective + noun)
+	return clean(noun, adjective)
 }
 
 type SententiaPathNamer struct{}
 
 func (spn *SententiaPathNamer) GetName() string {
-	str, err := sententia.Make("{{ adjective }}{{ nouns }}")
+	str1, err := sententia.Make("{{ noun }}")
 	if err != nil {
 		panic(err)
 	}
-	return strings.ToLower(str)
+
+	str2, err := sententia.Make("{{ adjective }}")
+	if err != nil {
+		panic(err)
+	}
+
+	return clean(str1, str2)
 }

@@ -11,9 +11,11 @@ import (
 	"github.com/atotto/clipboard"
 )
 
-type ClipboardDestination struct{}
-type ConsoleDestination struct{}
-type BlackholeDestination struct{}
+type (
+	ClipboardDestination struct{}
+	ConsoleDestination   struct{}
+	BlackholeDestination struct{}
+)
 
 type RandomItemSelector struct{}
 

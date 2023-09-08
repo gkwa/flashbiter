@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"time"
 
 	"github.com/atotto/clipboard"
 )
@@ -15,20 +16,21 @@ func main() {
 
 	var pn PathNamer
 
-	randomNumber := rand.Intn(3)
-	switch randomNumber {
-	case 0:
-		pn = &SententiaPathNamer{}
-	case 1:
-		pn = &RandomdataPathNamer{}
-	case 2:
-		pn = &GofakeitPathNamer{}
+	namers := []PathNamer{
+		// &SententiaPathNamer{},
+		// &RandomdataPathNamer{},
+		// &GofakeitPathNamer{},
+		// &GofakeitPathNamer{},
+		&Combo1{},
+		&Combo2{},
+		&Combo3{},
 	}
 
-	pn = &GofakeitPathNamer{}
-	pn = &Combo1{}
-	pn = &Combo2{}
+	source := rand.NewSource(time.Now().UnixNano())
+	rng := rand.New(source)
 
+	randomIndex := rng.Intn(len(namers))
+	pn = namers[randomIndex]
 	uniquePaths := generateUniquePaths(baseDir, count, pn)
 
 	inputSelector := getInputSelector()
