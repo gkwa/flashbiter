@@ -25,6 +25,10 @@ func main() {
 		pn = &GofakeitPathNamer{}
 	}
 
+	pn = &GofakeitPathNamer{}
+	pn = &Combo1{}
+	pn = &Combo2{}
+
 	uniquePaths := generateUniquePaths(baseDir, count, pn)
 
 	inputSelector := getInputSelector()

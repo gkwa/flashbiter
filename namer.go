@@ -8,14 +8,32 @@ import (
 	"github.com/castillobgr/sententia"
 )
 
-type RandomdataPathNamer struct{}
-type GofakeitPathNamer struct{}
-type SententiaPathNamer struct{}
-
 
 type PathNamer interface {
 	GetName() string
 }
+
+
+type Combo1 struct{}
+
+func (spn *Combo1) GetName() string {
+	adjective := gofakeit.SafeColor()
+	noun := gofakeit.NounAbstract()
+
+	return strings.ToLower(adjective + noun)
+}
+
+type Combo2 struct{}
+
+func (spn *Combo2) GetName() string {
+	adjective := gofakeit.Adjective()
+	noun := gofakeit.State()
+
+	return strings.ToLower(adjective + noun)
+}
+
+
+type RandomdataPathNamer struct{}
 
 func (rpn *RandomdataPathNamer) GetName() string {
 	adjective := randomdata.Adjective()
@@ -24,12 +42,16 @@ func (rpn *RandomdataPathNamer) GetName() string {
 	return strings.ToLower(adjective + noun)
 }
 
+type GofakeitPathNamer struct{}
+
 func (spn *GofakeitPathNamer) GetName() string {
-	adjective := gofakeit.AdjectiveDescriptive()
-	noun := gofakeit.Noun()
+	adjective := gofakeit.HackerAdjective()
+	noun := gofakeit.NounAbstract()
 
 	return strings.ToLower(adjective + noun)
 }
+
+type SententiaPathNamer struct{}
 
 func (spn *SententiaPathNamer) GetName() string {
 	str, err := sententia.Make("{{ adjective }}{{ nouns }}")
