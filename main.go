@@ -56,7 +56,6 @@ func main() {
 	}
 
 	GitInit(selectedPath)
-	_ = gitCommitReadme(selectedPath)
 
 	absPath, err := getAbsPath(selectedPath)
 	if err != nil {
