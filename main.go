@@ -2,46 +2,25 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
-	"time"
+	"log/slog"
+	"os"
+	"path/filepath"
 
 	"github.com/atotto/clipboard"
+	mymazda "github.com/taylormonacelli/forestfish/mymazda"
 )
 
 func main() {
-	baseDir := getBaseDir()
-	expandTilde(&baseDir)
+	status := Main()
+	os.Exit(status)
+}
 
-	count := 35
+var randNameCount = 35
 
-	var pn PathNamer
-
-	namers := []PathNamer{
-		&SententiaPathNamer{},
-		&RandomdataPathNamer{},
-		&GofakeitPathNamer{},
-		&Combo1{},
-		&Combo2{},
-		&Combo4{},
-		&Combo5{},
-		&Combo6{},
-		&Combo7{},
-		&Combo8{},
-	}
-
-	source := rand.NewSource(time.Now().UnixNano())
-	rng := rand.New(source)
-
-	var uniquePaths map[string]string
-
-	for {
-		randomIndex := rng.Intn(len(namers))
-		pn = namers[randomIndex]
-		x := generateUniquePaths(baseDir, 2, pn)
-		uniquePaths = mergeMaps(uniquePaths, x)
-		if len(uniquePaths) >= count {
-			break
-		}
+func Main() int {
+	uniquePaths, err := pathsBySubDir()
+	if err != nil {
+		slog.Error("doit", "error", err)
 	}
 
 	inputSelector := getInputSelector()
@@ -52,16 +31,21 @@ func main() {
 
 	// human canceled tview
 	if selectedPath == "" {
-		return
+		return 0
 	}
 
 	GitInit(selectedPath)
 
-	absPath, err := getAbsPath(selectedPath)
+	absPath, err := filepath.Abs(selectedPath)
 	if err != nil {
+		slog.Error("filepath.Abs", "error", err)
+	}
+	if !mymazda.DirExists(absPath) {
 		panic(err)
 	}
 
 	fmt.Println(absPath)
 	clipboard.WriteAll(absPath)
+
+	return 0
 }

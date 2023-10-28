@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log/slog"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -9,6 +10,8 @@ import (
 	"time"
 
 	"github.com/atotto/clipboard"
+	mymazda "github.com/taylormonacelli/forestfish/mymazda"
+	"github.com/taylormonacelli/oliveluck"
 )
 
 type (
@@ -39,21 +42,18 @@ func (cd *ClipboardDestination) Write(data string) error {
 func writeToClipboard(s string) error {
 	err := clipboard.WriteAll(s)
 	if err != nil {
-		fmt.Println("Error writing to clipboard:", err)
+		slog.Error("error writing to clipboard", "error", err)
 	}
+
 	return err
 }
 
 func (fd *FileDestination) Write(data string) error {
-	file, err := os.OpenFile(fd.FilePath, os.O_CREATE|os.O_WRONLY, 0o644)
+	err := os.WriteFile(fd.FilePath, []byte(data), 0o644)
 	if err != nil {
 		return err
 	}
-	defer file.Close()
 
-	if _, err := file.WriteString(data + "\n"); err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -71,17 +71,26 @@ func mergeMaps(map1, map2 map[string]string) map[string]string {
 	return merged
 }
 
-func generateUniquePaths(baseDir string, numPaths int, pn PathNamer) map[string]string {
+func genUniquePaths(baseDir string, numPaths int, pn oliveluck.Namer) map[string]string {
 	myMap := make(map[string]string)
-	for i := 0; i < numPaths; {
+
+	for count := 0; count < numPaths; {
 		subdir := pn.GetName()
 		fullpath := filepath.Join(baseDir, subdir)
-		if _, keyExists := myMap[subdir]; keyExists || pathExists(fullpath) {
+		_, found := myMap[subdir]
+
+		if found {
 			continue
 		}
+
+		if mymazda.DirExists(fullpath) || mymazda.FileExists(fullpath) {
+			continue
+		}
+
 		myMap[subdir] = fullpath
-		i++
+		count++
 	}
+
 	return myMap
 }
 
@@ -91,6 +100,7 @@ func selectPath(paths map[string]string, is InputSelector) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	return paths[item], nil
 }
 
@@ -111,7 +121,7 @@ func (cd *ConsoleDestination) Write(data string) error {
 
 func returnValue(val string, output OutputDestination) {
 	if err := output.Write(val); err != nil {
-		fmt.Println("Error writing to output:", err)
+		slog.Error("error writing to output", "error", err)
 	}
 }
 
@@ -132,6 +142,7 @@ func getInputSelector() InputSelector {
 			return ris
 		}
 	}
+
 	return uis
 }
 
