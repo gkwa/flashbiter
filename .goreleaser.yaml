@@ -9,6 +9,7 @@ builds:
   - linux
   - windows
   - darwin
+  main: main.go
   goarch:
   - amd64
   binary: flashbiter
