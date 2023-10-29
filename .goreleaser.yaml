@@ -14,6 +14,7 @@ builds:
   - amd64
   binary: flashbiter
   id: flashbiter
+  main: cmd/main.go
 archives:
 - format: tar.gz
   name_template: |-
