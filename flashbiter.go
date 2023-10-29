@@ -1,4 +1,4 @@
-package main
+package flashbiter
 
 import (
 	"fmt"
@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/atotto/clipboard"
+	"github.com/taylormonacelli/aeryavenue"
 	mymazda "github.com/taylormonacelli/forestfish/mymazda"
 )
 
@@ -14,7 +15,8 @@ var randNameCount = 35
 func Main() int {
 	selectedPath, err := GetUniquePath()
 	if err != nil {
-		panic(err)
+		slog.Error("GetUniquePath", "error", err)
+		return 1
 	}
 
 	// human canceled tview
@@ -39,14 +41,14 @@ func Main() int {
 }
 
 func GetUniquePath() (string, error) {
-	uniquePaths, err := pathsBySubDir()
+	paths, err := genPathsBySubDir()
 	if err != nil {
 		slog.Error("pathsBySubDir", "error", err)
 		return "", err
 	}
 
-	inputSelector := getInputSelector()
-	selectedPath, err := selectPath(uniquePaths, inputSelector)
+	inputSelector := aeryavenue.GetInputSelector()
+	selectedPath, err := selectPath(paths, inputSelector)
 	if err != nil {
 		return "", err
 	}

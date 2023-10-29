@@ -1,4 +1,4 @@
-package main
+package flashbiter
 
 import (
 	"log/slog"
@@ -12,10 +12,11 @@ func getBaseDir() string {
 	if len(os.Args) > 1 {
 		return os.Args[1]
 	}
+
 	return "."
 }
 
-func pathsBySubDir() (map[string]string, error) {
+func genPathsBySubDir() (map[string]string, error) {
 	baseDir := getBaseDir()
 	r, err := mymazda.ExpandTilde(baseDir)
 	if err != nil {

@@ -1,34 +1,35 @@
-SOURCES := $(wildcard *.go) $(wildcard **/*.go)
+BIN := flashbiter
 
-ifeq ($(shell uname),Darwin)
-    GOOS = darwin
-    GOARCH = amd64
-    EXEEXT =
-else ifeq ($(shell uname),Linux)
-    GOOS = linux
-    GOARCH = $(shell arch)
-    EXEEXT =
-else ifeq ($(shell uname),Windows_NT)
-    GOOS = windows
-    GOARCH = amd64
-    EXEEXT = .exe
+GOPATH := $(shell go env GOPATH)
+ifeq ($(OS),Windows_NT)
+    GO_FILES := $(shell dir /S /B *.go)
+    GO_DEPS := $(shell dir /S /B go.mod go.sum)
+    CLEAN_CMD := del
+else
+    GO_FILES := $(shell find . -name '*.go')
+    GO_DEPS := $(shell find . -name go.mod -o -name go.sum)
+    CLEAN_CMD := rm -f
 endif
 
-TARGET := ./dist/flashbiter_$(GOOS)_$(GOARCH)_v1/flashbiter
-
-flashbiter: $(TARGET)
-	cp $< $@
-
-$(TARGET): $(SOURCES)
-	gofumpt -w $(SOURCES)
-	goreleaser build --single-target --snapshot --clean
+$(BIN): $(GO_FILES) $(GO_DEPS)
+	$(MAKE) pretty
 	go vet ./...
+	go build -o $(BIN) cmd/main.go
 
-all:
-	goreleaser build --snapshot --clean
+test: $(BIN)
+	./$(BIN)
+.PHONY: test
 
-.PHONY: clean
+pretty: $(GO_FILES)
+	gofumpt -w $^
+.PHONY: pretty
+
+install: $(GOPATH)/bin/$(BIN)
+.PHONY: install
+
+$(GOPATH)/bin/$(BIN): $(BIN)
+	mv $(BIN) $(GOPATH)/bin/$(BIN)
+
 clean:
-	rm -f flashbiter
-	rm -f $(TARGET)
-	rm -rf dist
+	rm -f $(BIN)
+.PHONY: clean
