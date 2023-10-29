@@ -3,28 +3,16 @@ package main
 import (
 	"fmt"
 	"log/slog"
-	"os"
 	"path/filepath"
 
 	"github.com/atotto/clipboard"
 	mymazda "github.com/taylormonacelli/forestfish/mymazda"
 )
 
-func main() {
-	status := Main()
-	os.Exit(status)
-}
-
 var randNameCount = 35
 
 func Main() int {
-	uniquePaths, err := pathsBySubDir()
-	if err != nil {
-		slog.Error("doit", "error", err)
-	}
-
-	inputSelector := getInputSelector()
-	selectedPath, err := selectPath(uniquePaths, inputSelector)
+	selectedPath, err := GetUniquePath()
 	if err != nil {
 		panic(err)
 	}
@@ -48,4 +36,20 @@ func Main() int {
 	clipboard.WriteAll(absPath)
 
 	return 0
+}
+
+func GetUniquePath() (string, error) {
+	uniquePaths, err := pathsBySubDir()
+	if err != nil {
+		slog.Error("pathsBySubDir", "error", err)
+		return "", err
+	}
+
+	inputSelector := getInputSelector()
+	selectedPath, err := selectPath(uniquePaths, inputSelector)
+	if err != nil {
+		return "", err
+	}
+
+	return selectedPath, nil
 }

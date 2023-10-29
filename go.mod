@@ -8,6 +8,7 @@ require (
 	github.com/go-git/go-git/v5 v5.8.1
 	github.com/rivo/tview v0.0.0-20230826224341-9754ab44dc1c
 	github.com/taylormonacelli/forestfish v0.0.10
+	github.com/taylormonacelli/goldbug v0.0.6
 	github.com/taylormonacelli/oliveluck v0.0.1
 )
 
