@@ -30,8 +30,6 @@ github.com/elazarl/goproxy v0.0.0-20221015165544-a0805db90819 h1:RIB4cRk+lBqKK3O
 github.com/elazarl/goproxy v0.0.0-20221015165544-a0805db90819/go.mod h1:Ro8st/ElPeALwNFlcTpWmkr6IoMFfkjXAvTHpevnDsM=
 github.com/emirpasic/gods v1.18.1 h1:FXtiHYKDGKCW2KzwZKx0iC0PQmdlorYgdFG9jPXJ1Bc=
 github.com/emirpasic/gods v1.18.1/go.mod h1:8tpGGwCnJ5H4r6BWwaV6OrWmMoPhUl5jm/FMNAnJvWQ=
-github.com/ewohltman/graphdot v0.1.1 h1:kB7YkdMxoGk9SJ5Nh3mnuDqJtTLrGavAmElcxL9DQQk=
-github.com/ewohltman/graphdot v0.1.1/go.mod h1:ubGca4uEkZRP5Dz4vkdZa0xBif9gHyIwH0EGRKmD8eQ=
 github.com/gdamore/encoding v1.0.0 h1:+7OoQ1Bc6eTm5niUzBa0Ctsh6JbMW6Ra+YNuAtDBdko=
 github.com/gdamore/encoding v1.0.0/go.mod h1:alR0ol34c49FCSBLjhosxzcPHQbf2trDkoo5dl+VrEg=
 github.com/gdamore/tcell/v2 v2.6.0 h1:OKbluoP9VYmJwZwq/iLb4BxwKcwGthaa1YNBJIyCySg=
@@ -92,6 +90,8 @@ github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXf
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
 github.com/stretchr/testify v1.8.4 h1:CcVxjf3Q8PM0mHUKJCdn+eZZtm5yQwehR5yeSVQQcUk=
 github.com/stretchr/testify v1.8.4/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXlSw2iwfAo=
+github.com/taylormonacelli/aeryavenue v0.0.1 h1:Vc2a33Mvh9rb4oXy4NjeC4OXanAPwOCNNQxF86jv/lY=
+github.com/taylormonacelli/aeryavenue v0.0.1/go.mod h1:5pqHQR/1eJlGkaQEPt2qQU2jVmf/lKfUgOf9T2hW3nc=
 github.com/taylormonacelli/forestfish v0.0.10 h1:NmCUPyF1XYz9DUJqAsnW3RzUMVXBBUtGAZ1q/vb8vDc=
 github.com/taylormonacelli/forestfish v0.0.10/go.mod h1:8Xio8qE+Hc/cthG+dNVLakh5qYHl05Sq5vS8XzU62sA=
 github.com/taylormonacelli/goldbug v0.0.6 h1:2NQnMjAfznHkKh8dKPTUHJqnswgqWrcF/NhOnm4TQRI=
