@@ -41,17 +41,36 @@ func Main() int {
 }
 
 func GetUniquePath() (string, error) {
-	paths, err := genPathsBySubDir()
+	pathMap, err := genPathsBySubDir()
 	if err != nil {
 		slog.Error("pathsBySubDir", "error", err)
 		return "", err
 	}
 
+	paths := make([]string, 0, len(pathMap))
+	for path := range pathMap {
+		paths = append(paths, path)
+	}
+
 	inputSelector := aeryavenue.GetInputSelector()
-	selectedPath, err := selectPath(paths, inputSelector)
+	selectedPath, err := inputSelector.SelectItem(paths)
 	if err != nil {
 		return "", err
 	}
 
 	return selectedPath, nil
+}
+
+func mergeMaps(map1, map2 map[string]string) map[string]string {
+	merged := make(map[string]string)
+
+	for key, value := range map1 {
+		merged[key] = value
+	}
+
+	for key, value := range map2 {
+		merged[key] = value
+	}
+
+	return merged
 }

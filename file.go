@@ -3,6 +3,7 @@ package flashbiter
 import (
 	"log/slog"
 	"os"
+	"path/filepath"
 
 	mymazda "github.com/taylormonacelli/forestfish/mymazda"
 	"github.com/taylormonacelli/oliveluck"
@@ -33,4 +34,27 @@ func genPathsBySubDir() (map[string]string, error) {
 	}
 
 	return mergeMap, nil
+}
+
+func genUniquePaths(baseDir string, numPaths int, pn oliveluck.Namer) map[string]string {
+	myMap := make(map[string]string)
+
+	for count := 0; count < numPaths; {
+		subdir := pn.GetName()
+		fullpath := filepath.Join(baseDir, subdir)
+		_, found := myMap[subdir]
+
+		if found {
+			continue
+		}
+
+		if mymazda.DirExists(fullpath) || mymazda.FileExists(fullpath) {
+			continue
+		}
+
+		myMap[subdir] = fullpath
+		count++
+	}
+
+	return myMap
 }
