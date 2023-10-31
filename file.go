@@ -1,6 +1,7 @@
 package flashbiter
 
 import (
+	"fmt"
 	"log/slog"
 	"os"
 	"path/filepath"
@@ -11,6 +12,7 @@ import (
 
 func getBaseDir() string {
 	if len(os.Args) > 1 {
+		slog.Debug(fmt.Sprintf("os.Args=%s", os.Args[1]))
 		return os.Args[1]
 	}
 
@@ -19,6 +21,7 @@ func getBaseDir() string {
 
 func genPathsBySubDir() (map[string]string, error) {
 	baseDir := getBaseDir()
+
 	r, err := mymazda.ExpandTilde(baseDir)
 	if err != nil {
 		slog.Error("expandTilde", "error", err)
@@ -36,11 +39,11 @@ func genPathsBySubDir() (map[string]string, error) {
 	return mergeMap, nil
 }
 
-func genUniquePaths(baseDir string, numPaths int, pn oliveluck.Namer) map[string]string {
+func genUniquePaths(baseDir string, numPaths int, pn func() string) map[string]string {
 	myMap := make(map[string]string)
 
 	for count := 0; count < numPaths; {
-		subdir := pn.GetName()
+		subdir := pn()
 		fullpath := filepath.Join(baseDir, subdir)
 		_, found := myMap[subdir]
 
