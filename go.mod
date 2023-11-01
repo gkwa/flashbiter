@@ -8,7 +8,7 @@ require (
 	github.com/taylormonacelli/aeryavenue v0.0.3
 	github.com/taylormonacelli/forestfish v0.0.10
 	github.com/taylormonacelli/goldbug v0.0.6
-	github.com/taylormonacelli/oliveluck v0.0.4
+	github.com/taylormonacelli/oliveluck v0.0.7
 )
 
 require (
@@ -32,7 +32,7 @@ require (
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
-	github.com/rivo/tview v0.0.0-20231024211518-8b7bcf9883df // indirect
+	github.com/rivo/tview v0.0.0-20231031172508-2dfe06011790 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/sergi/go-diff v1.3.1 // indirect
 	github.com/skeema/knownhosts v1.2.1 // indirect
