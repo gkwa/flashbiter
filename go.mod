@@ -5,10 +5,10 @@ go 1.21.1
 require (
 	github.com/atotto/clipboard v0.1.4
 	github.com/go-git/go-git/v5 v5.10.0
-	github.com/taylormonacelli/aeryavenue v0.0.3
+	github.com/taylormonacelli/aeryavenue v0.0.5
 	github.com/taylormonacelli/forestfish v0.0.10
 	github.com/taylormonacelli/goldbug v0.0.6
-	github.com/taylormonacelli/oliveluck v0.0.4
+	github.com/taylormonacelli/oliveluck v0.0.8
 )
 
 require (
@@ -32,7 +32,7 @@ require (
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
-	github.com/rivo/tview v0.0.0-20231024211518-8b7bcf9883df // indirect
+	github.com/rivo/tview v0.0.0-20231102183219-1b91b8131c43 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/sergi/go-diff v1.3.1 // indirect
 	github.com/skeema/knownhosts v1.2.1 // indirect
