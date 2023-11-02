@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 	"path/filepath"
+	"sort"
 
 	"github.com/atotto/clipboard"
 	"github.com/taylormonacelli/aeryavenue"
@@ -51,6 +52,8 @@ func GetUniquePath() (string, error) {
 	for path := range pathMap {
 		paths = append(paths, path)
 	}
+
+	sort.Strings(paths)
 
 	inputSelector := aeryavenue.GetInputSelector()
 	selectedPath, err := inputSelector.SelectItem(paths)
