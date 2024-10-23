@@ -104,6 +104,8 @@ github.com/taylormonacelli/goldbug v0.0.6 h1:2NQnMjAfznHkKh8dKPTUHJqnswgqWrcF/Nh
 github.com/taylormonacelli/goldbug v0.0.6/go.mod h1:RmeCuiI1RYYPob+BPHEZcmp+IVd6EkoHsoRukenJmH0=
 github.com/taylormonacelli/oliveluck v0.0.8 h1:61RfNKxmGDECQBeB7/YnCStGiLhpB3DJRplGYQrOEDA=
 github.com/taylormonacelli/oliveluck v0.0.8/go.mod h1:wbjlbXcdEHHtO1p/c6uSyhvlPnrT0ZvVTrQzjYbae7A=
+github.com/taylormonacelli/oliveluck v0.0.10 h1:vq4hmZHj1Gg/Ikk9JcWZNCNVdWZeVebkmCprQDKMkDw=
+github.com/taylormonacelli/oliveluck v0.0.10/go.mod h1:wbjlbXcdEHHtO1p/c6uSyhvlPnrT0ZvVTrQzjYbae7A=
 github.com/xanzy/ssh-agent v0.3.3 h1:+/15pJfg/RsTxqYcX6fHqOXZwwMP+2VyYWJeWM2qQFM=
 github.com/xanzy/ssh-agent v0.3.3/go.mod h1:6dzNDKs0J9rVPHPhaGCukekBHKqfl+L3KghI1Bc68Uw=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
