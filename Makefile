@@ -35,7 +35,7 @@ check: .timestamps/.check.time
 build: $(BIN)
 
 $(BIN): .timestamps/.build.time .timestamps/.tidy.time
-	go build -ldflags "$(LDFLAGS)" -o $@
+	go build -ldflags "$(LDFLAGS)" -o $@ cmd/main.go
 
 .timestamps/.build.time: $(SRC)
 	@mkdir -p .timestamps
@@ -96,7 +96,7 @@ test:
 
 .PHONY: install # go install
 install:
-	go install -ldflags "$(LDFLAGS)"
+	go install -ldflags "$(LDFLAGS)" cmd/main.go
 
 .PHONY: help # show makefile rules
 help:
