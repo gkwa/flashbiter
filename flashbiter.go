@@ -25,18 +25,28 @@ func Main() int {
 		return 0
 	}
 
-	GitInit(selectedPath)
+	if err := GitInit(selectedPath); err != nil {
+		slog.Error("GitInit", "error", err)
+		return 1
+	}
 
 	absPath, err := filepath.Abs(selectedPath)
 	if err != nil {
 		slog.Error("filepath.Abs", "error", err)
+		return 1
 	}
+
 	if !mymazda.DirExists(absPath) {
-		panic(err)
+		slog.Error("directory does not exist", "path", absPath)
+		return 1
 	}
 
 	fmt.Println(absPath)
-	clipboard.WriteAll(absPath)
+
+	if err := clipboard.WriteAll(absPath); err != nil {
+		slog.Error("clipboard.WriteAll", "error", err)
+		return 1
+	}
 
 	return 0
 }
@@ -52,7 +62,6 @@ func GetUniquePath() (string, error) {
 	for path := range pathMap {
 		paths = append(paths, path)
 	}
-
 	sort.Strings(paths)
 
 	inputSelector := aeryavenue.GetInputSelector()
@@ -66,14 +75,11 @@ func GetUniquePath() (string, error) {
 
 func mergeMaps(map1, map2 map[string]string) map[string]string {
 	merged := make(map[string]string)
-
 	for key, value := range map1 {
 		merged[key] = value
 	}
-
 	for key, value := range map2 {
 		merged[key] = value
 	}
-
 	return merged
 }

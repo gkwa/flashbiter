@@ -16,7 +16,6 @@ require (
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/Pallinder/go-randomdata v1.2.0 // indirect
 	github.com/ProtonMail/go-crypto v1.0.0 // indirect
-	github.com/acomagu/bufpipe v1.0.4 // indirect
 	github.com/brianvoe/gofakeit/v6 v6.24.0 // indirect
 	github.com/castillobgr/sententia v0.0.0-20160918013314-9b04b4a53625 // indirect
 	github.com/cloudflare/circl v1.3.7 // indirect
