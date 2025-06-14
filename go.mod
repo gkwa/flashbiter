@@ -6,7 +6,7 @@ toolchain go1.24.4
 
 require (
 	github.com/atotto/clipboard v0.1.4
-	github.com/go-git/go-git/v5 v5.16.1
+	github.com/go-git/go-git/v5 v5.16.2
 	github.com/taylormonacelli/aeryavenue v0.0.7
 	github.com/taylormonacelli/forestfish v0.0.10
 	github.com/taylormonacelli/goldbug v0.0.6
